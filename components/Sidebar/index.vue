@@ -35,7 +35,7 @@ const name = "tazkirfurqan.online";
       <SidebarMenu />
       <div class="p-4">
         <div
-          class="flex items-center gap-2 text-black cursor-pointer hover:bg-neutral-50 rounded p-2"
+          class="flex items-center gap-2 text-black cursor-pointer hover:bg-neutral-50 rounded p-2 shadow-md"
         >
           <div
             class="bg-green-300 h-10 w-10 rounded-full flex items-center justify-center font-bold text-white"

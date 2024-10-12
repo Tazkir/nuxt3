@@ -1,11 +1,11 @@
 <script setup>
 import { watch, ref, computed, onMounted } from "vue";
 
-let props = defineProps(["currentCategory", "data"]);
-let data = props.data || [];
-let currentCategory = props.currentCategory || "today";
+const props = defineProps(["currentCategory", "data"]);
+const data = props.data || [];
+const currentCategory = ref(props.currentCategory || "today");
 
-let categories = ref({
+const categories = ref({
   today: [],
   week: [
     "Sunday",
@@ -48,26 +48,14 @@ function generateMonthCategories() {
 watch(
   () => props.currentCategory,
   (newCategory) => {
+    currentCategory.value = newCategory; // Update the currentCategory
     // Update chart categories dynamically when switching tabs
     if (newCategory === "today") {
-      generateTodayCategories(); // Regenerate 24-hour categories when switching to "today"
-    } else if (newCategory === "week") {
-      categories.value.week = [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-      ];
+      generateTodayCategories();
     } else if (newCategory === "month") {
-      generateMonthCategories(); // Regenerate categories when switching to the "month" tab
-    } else if (newCategory === "year") {
-      categories.value.year = Array.from({ length: 365 }, (_, i) =>
-        (i + 1).toString()
-      );
+      generateMonthCategories();
     }
+    // No need to regenerate week and year categories as they're static
   },
   { immediate: true }
 );
@@ -75,9 +63,10 @@ watch(
 // Initialize default categories on mount
 onMounted(() => {
   generateTodayCategories(); // Generate categories for "today" on mount
+  generateMonthCategories(); // Generate categories for "month" on mount
 });
 
-let options = computed(() => ({
+const options = computed(() => ({
   chart: {
     type: "line",
     animation: {
@@ -88,8 +77,8 @@ let options = computed(() => ({
     text: "",
   },
   xAxis: {
-    gridLineColor: "transparent", // Remove gridlines
-    categories: categories.value[currentCategory], // Set xAxis categories dynamically based on the current category
+    gridLineColor: "transparent",
+    categories: categories.value[currentCategory.value],
   },
   yAxis: {
     gridLineColor: "transparent",
